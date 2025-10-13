@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+{% block content %}
+{% if animal %}
+  <h1>{{ animal.name }}</h1>
+  <p><strong>Species:</strong> {{ animal.species }}</p>
+  <p><strong>Breed:</strong> {{ animal.breeds.primary }}</p>
+  <p><strong>Age:</strong> {{ animal.age }}</p>
+  <p><strong>Gender:</strong> {{ animal.gender }}</p>
+  <p><strong>Description:</strong> {{ animal.description|safe }}</p>
+  {% if animal.photos %}
+    <img src="{{ animal.photos.0.medium }}" alt="{{ animal.name }}">
+  {% endif %}
+{% else %}
+  <p>Animal not found.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h2>Search for Animals 🐾</h2>
+<form method="GET" action="{% url 'search' %}">
+    <input type="text" name="q" placeholder="Search by breed or location" required>
+    <button type="submit">Search</button>
+</form>
+
+{% if animals %}
+    <ul>
+        {% for animal in animals %}
+            <li>{{ animal.name }} - {{ animal.breeds.primary }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

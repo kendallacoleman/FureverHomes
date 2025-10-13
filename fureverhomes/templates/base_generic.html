@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FureverHomes 🐾</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header id="navbar">
+        <h1><a href="{% url 'home' %}">FureverHomes</a></h1>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'search' %}">Search</a></li>
+                <li><a href="{% url 'profiles' %}">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Page-specific content goes here -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 FureverHomes | Built with ❤️ and Django</p>
+    </footer>
+</body>
+</html>
+<script>
+let lastScrollTop = 0;
+const header = document.querySelector('header');
+
+window.addEventListener('scroll', function() {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollTop > lastScrollTop) {
+        // scrolling down
+        header.style.top = "-60px"; // hide navbar (same as its height)
+    } else {
+        // scrolling up
+        header.style.top = "0";
+    }
+    lastScrollTop = scrollTop;
+});
+</script>
