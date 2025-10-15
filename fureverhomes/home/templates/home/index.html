@@ -1,5 +1,10 @@
 {% extends "base_generic.html" %}
+{% load static %}
+
 {% block content %}
-<h1>Welcome to FureverHomes 🐶🐱</h1>
-<a href="{% url 'search' %}">Find your new friend</a>
+  <div class="home-container">
+      <h1>Welcome to FureverHomes 🐾</h1>
+      <div id="react-pet-search"></div>
+      <script type="module" src="{% static 'dist/index.js' %}"></script>
+  </div>
 {% endblock %}
