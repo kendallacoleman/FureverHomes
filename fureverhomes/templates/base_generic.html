@@ -6,44 +6,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FureverHomes 🐾</title>
+    <!-- Adjusted paths for top-level static folder -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <header id="navbar">
-        <h1><a href="{% url 'home' %}">FureverHomes</a></h1>
+        <div class="logo">
+            <a href="{% url 'home' %}">FureverHomes 🐾</a>
+        </div>
         <nav>
             <ul class="nav-links">
                 <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
                 <li><a href="{% url 'search' %}">Search</a></li>
-                <li><a href="{% url 'profiles' %}">Profile</a></li>
+                <li><a href="{% url 'profiles' %}">Profiles</a></li>
             </ul>
         </nav>
+        <div class="hamburger" id="hamburger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+        
     </header>
 
     <main>
-        {% block content %}
-        <!-- Page-specific content goes here -->
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
     <footer>
-        <p>&copy; 2025 FureverHomes | Built with ❤️ and Django</p>
+        <p>&copy; 2025 FureverHomes | Built by Kendall Coleman and Cam Sateri</p>
     </footer>
+
+    <!-- Adjusted JS path -->
+    <script src="{% static 'js/navbar.js' %}"></script>
 </body>
 </html>
-<script>
-let lastScrollTop = 0;
-const header = document.querySelector('header');
-
-window.addEventListener('scroll', function() {
-    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    if (scrollTop > lastScrollTop) {
-        // scrolling down
-        header.style.top = "-60px"; // hide navbar (same as its height)
-    } else {
-        // scrolling up
-        header.style.top = "0";
-    }
-    lastScrollTop = scrollTop;
-});
-</script>
