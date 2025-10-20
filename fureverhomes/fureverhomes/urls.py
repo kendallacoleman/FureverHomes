@@ -27,6 +27,13 @@ urlpatterns = [
     path('about/', include('about.urls')),
 ]
 
+from django.views.generic import TemplateView
+
+urlpatterns += [
+    path('', TemplateView.as_view(template_name='index.html')),
+]
+
+
 # Use include() to add paths from the catalog application (LAB03)
 # from django.urls import include
 

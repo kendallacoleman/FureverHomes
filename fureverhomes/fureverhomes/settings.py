@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     
     # project apps
     'rest_framework',
-    'profiles.apps.ProfilesConfig',
     'home',
     'profiles',
     'search_animals.apps.SearchAnimalsConfig',

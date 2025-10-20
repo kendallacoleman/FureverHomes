@@ -1,46 +1,35 @@
-// src/api.js
+// Import Axios
 import axios from "axios";
 
-// Base URL for your Django backend
-const djangoAPI = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/", // adjust if needed
-  withCredentials: true,
+// Create an Axios instance with your backend base URL
+const api = axios.create({
+  baseURL: "http://127.0.0.1:8000/api/", // adjust if your Django API uses a different path
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+  withCredentials: true, // if you use cookies for authentication
 });
 
-// Example: get user profile
-export const getUserProfile = async (userId) => {
-  const response = await djangoAPI.get(`users/${userId}/`);
-  return response.data;
-};
+// Optional: Add request/response interceptors
+api.interceptors.request.use(
+  (config) => {
+    // For example, add auth token if needed
+    // const token = localStorage.getItem("token");
+    // if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-// Example: update user profile
-export const updateUserProfile = async (userId, profileData) => {
-  const response = await djangoAPI.put(`users/${userId}/`, profileData);
-  return response.data;
-};
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle errors globally
+    console.error("API error:", error.response || error.message);
+    return Promise.reject(error);
+  }
+);
 
-// --- Petfinder API setup ---
-const PETFINDER_API_KEY = klhaTvBAYs4QQVlyaoLD9kMj0p8Ybp98eRkQwU5jvucrkp66Mi;
-const PETFINDER_SECRET = O96CAj9NEyr4NDDnbSi1R85gnepbBWzG5fAcBcaD;
-
-// Function to fetch OAuth token from Petfinder
-export const getPetfinderToken = async () => {
-  const response = await axios.post("https://api.petfinder.com/v2/oauth2/token", {
-    grant_type: "client_credentials",
-    client_id: PETFINDER_API_KEY,
-    client_secret: PETFINDER_SECRET,
-  });
-  return response.data.access_token;
-};
-
-// Example: search for pets
-export const searchPets = async (token, params = {}) => {
-  const response = await axios.get("https://api.petfinder.com/v2/animals", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    params,
-  });
-  return response.data.animals;
-};
-
+// Default export so you can do: import api from "../api"
+export default api;
