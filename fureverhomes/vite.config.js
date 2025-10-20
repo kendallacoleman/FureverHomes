@@ -6,7 +6,8 @@ export default defineConfig({
   plugins: [react()],
   root: '.', // current folder
   build: {
-    outDir: 'static/js', // output goes to Django static folder
+    outDir: '../static/dist',
+    emptyOutDir: true,
     rollupOptions: {
       input: 'index.html', // Vite entry HTML
     }

@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # project apps
+    'rest_framework',
+    'profiles.apps.ProfilesConfig',
     'home',
     'profiles',
     'search_animals.apps.SearchAnimalsConfig',
@@ -129,7 +131,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    BASE_DIR / "static",
 ]
 
 # Default primary key field type

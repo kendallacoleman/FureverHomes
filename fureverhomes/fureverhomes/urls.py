@@ -30,10 +30,6 @@ urlpatterns = [
 # Use include() to add paths from the catalog application (LAB03)
 # from django.urls import include
 
-# urlpatterns += [
-#     path('catalog/', include('catalog.urls')),
-# ]
-
 # # Add URL maps to redirect the base URL to our application (LAB03)
 # from django.views.generic import RedirectView
 # urlpatterns += [
