@@ -33,3 +33,13 @@ api.interceptors.response.use(
 
 // Default export so you can do: import api from "../api"
 export default api;
+
+
+const API_BASE = "http://127.0.0.1:8000"; // Django backend
+
+export async function searchPets(params) {
+  const query = new URLSearchParams(params).toString();
+  const res = await fetch(`${API_BASE}/search/?${query}`);
+  if (!res.ok) throw new Error("Failed to fetch pets");
+  return res.json();
+}

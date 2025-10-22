@@ -1,26 +1,15 @@
+from .serializers import PetSerializer
+from .models import Pet
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from django.shortcuts import render
-from .petfinder_api import PetfinderClient
 
-def search_view(request):
-    client = PetfinderClient()
+# @api_view(['GET'])
+# def search_pets(request):
+#     query = request.GET.get('q', '')
+#     pets = Pet.objects.filter(name__icontains=query)
+#     serializer = PetSerializer(pets, many=True)
+#     return Response(serializer.data)
 
-    query = request.GET.get('query', '')
-    location = request.GET.get('location', '')
-    animal_type = request.GET.get('type', '')
-
-    params = {}
-    if query:
-        params['name'] = query
-    if location:
-        params['location'] = location
-    if animal_type:
-        params['type'] = animal_type
-
-    data = client.search_animals(params) if params else None
-
-    return render(request, 'search_animals/search.html', {
-        'animals': data['animals'] if data and 'animals' in data else [],
-        'query': query,
-        'location': location,
-        'animal_type': animal_type,
-    })
+def search_pets(request):
+    return render(request, 'search_animals/search.html')
