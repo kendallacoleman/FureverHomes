@@ -1,9 +1,0 @@
-{% extends "base_generic.html" %}
-{% load static %}
-
-{% block content %}
-<div id="react-search-root"></div>  <!-- React will mount here -->
-{% endblock %}
-
-<!-- Include React bundle -->
-<script type="module" src="{% static 'dist/index.js' %}"></script>

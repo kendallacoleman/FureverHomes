@@ -1,7 +1,0 @@
-from django.apps import AppConfig
-
-
-class SearchAnimalsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'search_animals'
-    label = 'search_animals'
