@@ -6,7 +6,7 @@ import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Navbar from './components/Navbar';
-// import Search from './pages/Search';
+import Search from './pages/Search';
 // import Favorites from './pages/Favorites';
 
 function Logout() {
@@ -25,6 +25,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/search' element={<Search />} />
         {/* <Route
           path="/"
           element={
@@ -32,8 +33,8 @@ function App() {
               <Search />
             </ProtectedRoute>
           }
-        />
-        <Route
+        /> */}
+        {/* <Route
           path="/"
           element={
             <ProtectedRoute>
