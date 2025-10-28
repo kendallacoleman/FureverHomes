@@ -3,83 +3,49 @@ import api from "../api";
 import "../styles/Home.css"
 
 function Home() {
-    // const [content, setContent] = useState("");
-    // const [title, setTitle] = useState("");
-
-    // useEffect(() => {
-    //     getNotes();
-    // }, []);
-
-    // const getNotes = () => {
-    //     api
-    //         .get("/api/notes/")
-    //         .then((res) => res.data)
-    //         .then((data) => {
-    //             setNotes(data);
-    //             console.log(data);
-    //         })
-    //         .catch((err) => alert(err));
-    // };
-
-    // const deleteNote = (id) => {
-    //     api
-    //         .delete(`/api/notes/delete/${id}/`)
-    //         .then((res) => {
-    //             if (res.status === 204) alert("Note deleted!");
-    //             else alert("Failed to delete note.");
-    //             getNotes();
-    //         })
-    //         .catch((error) => alert(error));
-    // };
-
-    // const createNote = (e) => {
-    //     e.preventDefault();
-    //     api
-    //         .post("/api/notes/", { content, title })
-    //         .then((res) => {
-    //             if (res.status === 201) alert("Note created!");
-    //             else alert("Failed to make note.");
-    //             getNotes();
-    //         })
-    //         .catch((err) => alert(err));
-    // };
     return (
-        <p>Home Page</p>
-    )
-    // return (
-    //     <div>
-    //         <div>
-    //             <h2>Notes</h2>
-    //             {notes.map((note) => (
-    //                 <Note note={note} onDelete={deleteNote} key={note.id} />
-    //             ))}
-    //         </div>
-    //         <h2>Create a Note</h2>
-    //         <form onSubmit={createNote}>
-    //             <label htmlFor="title">Title:</label>
-    //             <br />
-    //             <input
-    //                 type="text"
-    //                 id="title"
-    //                 name="title"
-    //                 required
-    //                 onChange={(e) => setTitle(e.target.value)}
-    //                 value={title}
-    //             />
-    //             <label htmlFor="content">Content:</label>
-    //             <br />
-    //             <textarea
-    //                 id="content"
-    //                 name="content"
-    //                 required
-    //                 value={content}
-    //                 onChange={(e) => setContent(e.target.value)}
-    //             ></textarea>
-    //             <br />
-    //             <input type="submit" value="Submit"></input>
-    //         </form>
-    //     </div>
-    // );
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+            <h2>Welcome to Furever Homes! 🐾</h2>
+            <p>
+                Find your new best friend today. Our application connects you to adoptable animals using the PetFinder API.
+            </p>
+            
+            <div style={{ 
+                marginTop: '40px', 
+                padding: '30px', 
+                border: '1px solid #ccc', 
+                borderRadius: '8px',
+                backgroundColor: '#f9f9f9'
+            }}>
+                <h3>Start Your Search</h3>
+                <p>Click the "Search" link above or use the form below to browse animals near you.</p>
+                {/* TODO: You will replace this placeholder with a functional SearchForm component
+                  that communicates with your Django API.
+                */}
+                <button 
+                    style={{ padding: '10px 20px', fontSize: '1em', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                    onClick={() => console.log('Navigate to search page')}
+                >
+                    Browse Adoptable Pets
+                </button>
+            </div>
+            <br/>
+            <h2>About Us! 🐾</h2>
+            <p>Every year, about 6.5 million cats and dogs enter shelters in the United States.
+               And only about 4.2 million of those cats and dogs get adopted.
+               This means about 2.3 million dogs and cats are left in shelters each year and are not adopted.
+            </p>
+            <p>Because so many pets are left in shelters, many of these animals are euthanized because they will never be able to find a home.
+               About 2 million healthy cats and dogs are euthanized in shelters each year in the US because of overcrowding and lack of resources.
+            </p>
+            <p>At FureverHomes, our mission is to help reduce the number of pets in shelters by making it easier than ever to find and adopt pets.
+               As pet owners ourselves, we understand the joy and companionship that pets bring to our lives, and we want to help more animals find their forever homes.
+            </p>
+            <p>We know that we can help find more pets a loving home by connecting potential pet adopters with shelters and rescue organizations.
+               By providing a user-friendly platform that showcases available pets, we aim to make the adoption process seamless and enjoyable for both the adopters and the animals.
+            </p>
+        </div>
+    );
 }
 
 export default Home;
