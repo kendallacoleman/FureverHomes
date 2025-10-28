@@ -46,8 +46,8 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-PETFINDER_API_KEY = 'klhaTvBAYs4QQVlyaoLD9kMj0p8Ybp98eRkQwU5jvucrkp66Mi'
-PETFINDER_SECRET = 'O96CAj9NEyr4NDDnbSi1R85gnepbBWzG5fAcBcaD'
+PETFINDER_API_KEY = os.getenv('PETFINDER_API_KEY')
+PETFINDER_SECRET = os.getenv('PETFINDER_SECRET')
 
 # Application definition
 
