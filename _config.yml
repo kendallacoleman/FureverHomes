@@ -1,0 +1,8 @@
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - frontend/node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
