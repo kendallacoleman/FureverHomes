@@ -1,0 +1,50 @@
+/* Layout for the entire search area */
+.search-page-container {
+    padding: 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+/* Styling for the search form itself (assuming inputs are aligned horizontally) */
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    align-items: center;
+}
+
+.search-form select, .search-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-form button {
+    padding: 10px 20px;
+    background-color: #3B64A5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.search-form button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+/* Grid layout for the list of pets (makes the cards align nicely) */
+.pet-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}

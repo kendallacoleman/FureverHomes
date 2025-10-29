@@ -7,7 +7,7 @@ import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Navbar from './components/Navbar';
 import Search from './pages/Search';
-// import Favorites from './pages/Favorites';
+import Favorites from './pages/Favorites';
 
 function Logout() {
   localStorage.clear()
@@ -34,14 +34,14 @@ function App() {
             </ProtectedRoute>
           }
         /> */}
-        {/* <Route
-          path="/"
+        <Route
+          path="/favorites"
           element={
             <ProtectedRoute>
               <Favorites />
             </ProtectedRoute>
           }
-        /> */}
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
