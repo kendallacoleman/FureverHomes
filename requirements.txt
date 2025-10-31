@@ -11,3 +11,4 @@ python-dotenv
 dj_database_url
 whitenoise
 requests
+gunicorn
