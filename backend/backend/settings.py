@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-)c-l#&$$w32#ckxs6nmr*@o^_ip+gme4&m9bmuytt-ks1x956p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ENVIRONMENT != 'production'
 
-ALLOWED_HOSTS = ['<URL>', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['https://fureverhomes-u8auv.ondigitalocean.app/', 'localhost', '127.0.0.1']
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
