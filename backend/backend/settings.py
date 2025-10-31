@@ -126,20 +126,7 @@ if ENVIRONMENT == "production":
         "default":
         dj_database_url.config(default=os.getenv("DATABASE_URL", "sqlite:///db.sqlite3"))
     }
-    DO_FQDN = os.getenv('WEBSERVICE_FQDN')
-
-    ALLOWED_HOSTS = [
-        'localhost',
-        '127.0.0.1',
-    ]
-
-    if DO_FQDN:
-        ALLOWED_HOSTS.append(DO_FQDN)
-
-    ALLOWED_HOSTS.append('.ondigitalocean.app')
-
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    USE_X_FORWARDED_HOST = True
+    
 else:
     DATABASES = {
         "default": {
@@ -148,7 +135,7 @@ else:
         }
     }
 
-    ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://fureverhomes-u8auv.ondigitalocean.app/', 'localhost', '127.0.0.1']
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
