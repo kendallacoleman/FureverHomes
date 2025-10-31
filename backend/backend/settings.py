@@ -137,6 +137,9 @@ if ENVIRONMENT == "production":
         ALLOWED_HOSTS.append(DO_FQDN)
 
     ALLOWED_HOSTS.append('.ondigitalocean.app')
+
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    USE_X_FORWARDED_HOST = True
 else:
     DATABASES = {
         "default": {
