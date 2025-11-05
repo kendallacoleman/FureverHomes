@@ -1,3 +1,7 @@
+.search-info {
+    text-align: center;
+}
+
 /* Layout for the entire search area */
 .search-page-container {
     padding: 20px;

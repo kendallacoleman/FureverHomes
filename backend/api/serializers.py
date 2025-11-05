@@ -21,7 +21,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
-        fields = ["id", "user", "item_name", "item_id", "created_at"]
+        fields = ["id", "user", "pet_name", "pet_id", "created_at"]
         read_only_fields = ["user", "created_at"]
 
 class CommentSerializer(serializers.ModelSerializer):

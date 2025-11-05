@@ -1,16 +1,13 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import PetSearchView, FavoriteViewSet, CommentViewSet, PetDetailView
+from .views import PetSearchView, PetDetailView, FavoriteViewSet, CommentViewSet
 
-# Router for viewsets (favorites and comments)
 router = DefaultRouter()
-router.register(r'favorites', FavoriteViewSet, basename='favorite')
-router.register(r'comments', CommentViewSet, basename='comment')
+router.register(r'favorites', FavoriteViewSet, basename='favorites')
+router.register(r'comments', CommentViewSet, basename='comments')
 
 urlpatterns = [
-    path('search/', PetSearchView.as_view(), name='search'),  # existing search
-    path('pets/<str:pet_id>/', PetDetailView.as_view(), name='pet-detail'),  # pet detail page
+    path('search/', PetSearchView.as_view(), name='search'),
+    path('animal/<int:pet_id>/', PetDetailView.as_view(), name='pet-detail'),
+    path('', include(router.urls)),
 ]
-
-# Add router urls (favorites, comments)
-urlpatterns += router.urls

@@ -24,7 +24,7 @@ class PetSearchView(APIView):
             "client_id": settings.PETFINDER_API_KEY,
             "client_secret": settings.PETFINDER_SECRET,
         }
-        response = requests.post(url, data=data)
+        response = requests.post(url, data=data, timeout=10)
         response.raise_for_status()
         return response.json().get("access_token")
 
@@ -33,28 +33,34 @@ class PetSearchView(APIView):
             token = self.get_petfinder_token()
             headers = {"Authorization": f"Bearer {token}"}
 
-            # Gather query params
-            query = request.query_params.get("q", "")
-            location = request.query_params.get("location", "")
-            animal_type = request.query_params.get("type", "")
-            page = request.query_params.get("page", 1)
+            pet_id = request.query_params.get("id")
+            if pet_id:
+                # Fetch single pet by ID
+                response = requests.get(
+                    f"https://api.petfinder.com/v2/animals/{pet_id}",
+                    headers=headers,
+                    timeout=10,
+                )
+            else:
+                # Fetch list of pets with filters
+                params = {
+                    "type": request.query_params.get("type"),
+                    "location": request.query_params.get("location"),
+                    "size": request.query_params.get("size"),
+                    "gender": request.query_params.get("gender"),
+                    "page": request.query_params.get("page", 1),
+                    "limit": 12,
+                }
+                # Remove empty values
+                params = {k: v for k, v in params.items() if v}
+                response = requests.get(
+                    "https://api.petfinder.com/v2/animals",
+                    headers=headers,
+                    params=params,
+                    timeout=10,
+                )
 
-            params = {
-                "q": query,
-                "location": location,
-                "type": animal_type,
-                "page": page,
-                "limit": 12,
-            }
-
-            response = requests.get(
-                "https://api.petfinder.com/v2/animals",
-                headers=headers,
-                params=params,
-                timeout=10,  # optional safety
-            )
             response.raise_for_status()
-
             return Response(response.json(), status=response.status_code)
 
         except requests.exceptions.RequestException as e:
@@ -63,6 +69,7 @@ class PetSearchView(APIView):
         except Exception as e:
             print("General error:", e)
             return Response({"error": str(e)}, status=500)
+
 
 class FavoriteViewSet(viewsets.ModelViewSet):
     serializer_class = FavoriteSerializer
@@ -97,7 +104,7 @@ class PetDetailView(APIView):
             "client_id": settings.PETFINDER_API_KEY,
             "client_secret": settings.PETFINDER_SECRET,
         }
-        response = requests.post(url, data=data)
+        response = requests.post(url, data=data, timeout=10)
         response.raise_for_status()
         return response.json().get("access_token")
 
@@ -113,4 +120,5 @@ class PetDetailView(APIView):
             response.raise_for_status()
             return Response(response.json(), status=response.status_code)
         except requests.exceptions.RequestException as e:
+            print("Request error:", e)
             return Response({"error": str(e)}, status=502)

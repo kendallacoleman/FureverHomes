@@ -3,33 +3,43 @@ import { useParams } from "react-router-dom";
 import api from "../api";
 import FavoriteButton from "../components/FavoriteButton";
 import CommentSection from "../components/CommentSection";
+import '../styles/AnimalDetail.css';
 
 export default function AnimalDetail() {
   const { id } = useParams();
   const [pet, setPet] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPet = async () => {
-      const res = await fetch(`http://localhost:8000/api/search/?id=${id}`);
-      const data = await res.json();
-      setPet(data.animals ? data.animals[0] : null);
+      try {
+        const res = await api.get(`/api/animal/${id}/`);
+        setPet(res.data.animal);
+      } catch (err) {
+        console.error("Failed to fetch pet details:", err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchPet();
   }, [id]);
 
-  if (!pet) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+  if (!pet) return <div>Pet not found.</div>;
+
+  const imageUrl = pet.photos?.[0]?.medium || 'https://placehold.co/400x400?text=No+Image';
 
   return (
-    <div style={{ padding: "2em" }}>
+    <div className="animal-detail-container">
       <h1>{pet.name}</h1>
-      {pet.photos?.[0]?.medium && (
-        <img src={pet.photos[0].medium} alt={pet.name} />
-      )}
-      <p>{pet.breeds?.primary}</p>
-      <p>{pet.age} • {pet.gender}</p>
-      <p>{pet.contact?.address?.city}</p>
+      <img src={imageUrl} alt={pet.name} className="animal-detail-image" />
+      <p><b>Breed:</b> {pet.breeds?.primary}</p>
+      <p><b>Age:</b> {pet.age}</p>
+      <p><b>Gender:</b> {pet.gender}</p>
+      <p><b>Size:</b> {pet.size}</p>
+      <p><b>Location:</b> {pet.contact?.address?.city}, {pet.contact?.address?.state}</p>
 
-      <FavoriteButton petId={id} />
+      <FavoriteButton petId={pet.id} petName={pet.name} />
       <CommentSection petId={id} />
     </div>
   );

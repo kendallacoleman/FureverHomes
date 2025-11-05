@@ -1,34 +1,43 @@
 import { useState, useEffect } from "react";
 import api from "../api";
 
-export default function CommentSection ({ petId }) {
-    const [comments, setComments] = useState([]);
-    const [newComment, setNewComment] = useState("");
+export default function CommentSection({ petId }) {
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
 
-    const fetchComments = async () => {
-        const res = await api.get(`/api/comments/${petID}/`);
-        setComments(res.data);
-    };
+  const fetchComments = async () => {
+    try {
+      const res = await api.get(`/api/comments/`, { params: { pet_id: petId } });
+      setComments(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-    useEffect(() => {
-        fetchComments();
-    }, [petId]);
+  useEffect(() => {
+    fetchComments();
+  }, [petId]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!newComment) return;
-        await api.post(`/api/comments/${petId}`, { text: newComment });
-        setNewComment("");
-        fetchComments();
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!newComment) return;
 
-    return (
+    try {
+      await api.post(`/api/comments/`, { pet_id: petId, text: newComment });
+      setNewComment("");
+      fetchComments();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
     <div style={{ marginTop: "2em" }}>
       <h3>Comments</h3>
       <ul>
         {comments.map((c) => (
           <li key={c.id}>
-            <b>{c.user}:</b> {c.text}
+            <b>{c.user.username}:</b> {c.text}
           </li>
         ))}
       </ul>
