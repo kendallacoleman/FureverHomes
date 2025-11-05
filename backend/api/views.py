@@ -9,7 +9,7 @@ from django.conf import settings
 from rest_framework.views import APIView
 
 class CreateUserView(generics.CreateAPIView):
-    queryset = User.objects.all
+    queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
