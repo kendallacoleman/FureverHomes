@@ -31,7 +31,6 @@ SECRET_KEY = 'django-insecure-)c-l#&$$w32#ckxs6nmr*@o^_ip+gme4&m9bmuytt-ks1x956p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ENVIRONMENT != 'production'
 
-# ALLOWED_HOSTS = ['https://fureverhomes-u8auv.ondigitalocean.app/', 'localhost', '127.0.0.1']
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -135,7 +134,7 @@ else:
         }
     }
 
-ALLOWED_HOSTS = ['https://fureverhomes-u8auv.ondigitalocean.app/', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['fureverhomes-g5esf.ondigitalocean.app', 'localhost', '127.0.0.1']
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -179,4 +178,4 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWS_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = True

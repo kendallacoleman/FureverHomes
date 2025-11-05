@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import Navbar from './components/Navbar';
 import Search from './pages/Search';
 import Favorites from './pages/Favorites';
+import AnimalDetail from './pages/AnimalDetail'
 
 function Logout() {
   localStorage.clear()
@@ -26,14 +27,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/search' element={<Search />} />
-        {/* <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Search />
-            </ProtectedRoute>
-          }
-        /> */}
+        <Route path="/animal/:id" element={<AnimalDetail />} />
         <Route
           path="/favorites"
           element={
