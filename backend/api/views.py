@@ -14,6 +14,10 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+    def create(self, request, *args, **kwargs):
+        print("Request data:", request.data)
+        return super().create(request, *args, **kwargs)
+
 class PetSearchView(APIView):
     permission_classes = [AllowAny]
 
