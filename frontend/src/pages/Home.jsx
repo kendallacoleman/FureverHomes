@@ -50,6 +50,8 @@ function Home() {
                 <p>We know that we can help find more pets a loving home by connecting potential pet adopters with shelters and rescue organizations.
                 By providing a user-friendly platform that showcases available pets, we aim to make the adoption process seamless and enjoyable for both the adopters and the animals.
                 </p>
+                <p>Have any questions? Click the help button at the top of the page to learn more and check out our Frequently Asked Questions!
+                </p>
             </div>
         </div>
     );

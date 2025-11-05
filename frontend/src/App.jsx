@@ -9,6 +9,7 @@ import Navbar from './components/Navbar';
 import Search from './pages/Search';
 import Favorites from './pages/Favorites';
 import AnimalDetail from './pages/AnimalDetail'
+import Help from "./pages/Help"
 
 function Logout() {
   localStorage.clear()
@@ -40,6 +41,7 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="*" element={<NotFound />}></Route>
+        <Route path="/help" element={<Help />} />
       </Routes>
     </BrowserRouter>
   )

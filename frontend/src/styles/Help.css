@@ -1,0 +1,18 @@
+.help-container {
+    max-width: 900px;
+    margin: 2rem auto;
+}
+
+.help-section {
+    margin-bottom: 2rem;
+}
+
+.help-section ul {
+    list-style-position: inside;
+    line-height: 1.8;
+}
+
+.faq-item h4 {
+    margin-bottom: 0rem;
+    margin-top: 0;
+}

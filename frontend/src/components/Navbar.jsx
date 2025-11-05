@@ -10,6 +10,9 @@ function Navbar() {
             </Link>
             <ul className="nav-links">
                 <li className="nav-item">
+                    <Link to="/help" className="nav-link">Help</Link>
+                </li>
+                <li className="nav-item">
                     <Link to="/search" className="nav-link">Search</Link>
                 </li>
                 <li className="nav-item">
