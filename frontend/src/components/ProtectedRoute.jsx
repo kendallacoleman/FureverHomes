@@ -1,12 +1,12 @@
 import { Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import * as jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { ACCESS_TOKEN } from "../constants";
 
 function ProtectedRoute({ children }) {
   const [isAuthorized, setIsAuthorized] = useState(null);
 
-  useEffect(() => {
+  const checkAuth = () => {
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (!token) {
       setIsAuthorized(false);
@@ -14,18 +14,29 @@ function ProtectedRoute({ children }) {
     }
 
     try {
-      const decoded = jwtDecode(token); // works with named import
+      const decoded = jwtDecode(token);
       const now = Date.now() / 1000;
-
-      if (decoded.exp < now) {
-        setIsAuthorized(false); // token expired
+      if (decoded.exp && decoded.exp < now) {
+        console.warn("Access token expired.");
+        setIsAuthorized(false);
       } else {
         setIsAuthorized(true);
       }
     } catch (err) {
-      console.error("Token decode error:", err);
+      console.error("Invalid token:", err);
       setIsAuthorized(false);
     }
+  };
+
+  useEffect(() => {
+    checkAuth();
+
+    // Watch for login/logout changes in other components
+    const interval = setInterval(() => {
+      checkAuth();
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   if (isAuthorized === null) return <div>Loading...</div>;
