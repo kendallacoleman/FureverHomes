@@ -2,7 +2,8 @@ import axios from "axios";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "./constants";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000", // Django backend
+  // baseURL: "http://localhost:8000", // Django backend
+  baseURL: process.env.BACKEND_URL || "http://localhost:8000",
   headers: {
     "Content-Type": "application/json",
   },
@@ -32,9 +33,10 @@ api.interceptors.response.use(
       const refreshToken = localStorage.getItem(REFRESH_TOKEN);
       if (refreshToken) {
         try {
-          const res = await axios.post("http://localhost:8000/api/token/refresh/", {
-            refresh: refreshToken,
-          });
+          const res = await axios.post(
+            `${process.env.REACT_APP_BACKEND_URL || "http://localhost:8000"}/api/token/refresh/`,
+            { refresh: refreshToken }
+          );
 
           localStorage.setItem(ACCESS_TOKEN, res.data.access);
           originalRequest.headers.Authorization = `Bearer ${res.data.access}`;

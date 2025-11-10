@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 import os
 ENVIRONMENT = os.getenv("DJANGO_ENV", "production")
 
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -48,6 +49,7 @@ SIMPLE_JWT = {
 
 PETFINDER_API_KEY = os.getenv('PETFINDER_API_KEY')
 PETFINDER_SECRET = os.getenv('PETFINDER_SECRET')
+BACKEND_URL = os.getenv('BACKEND_URL')
 
 # Application definition
 
