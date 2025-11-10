@@ -3,27 +3,17 @@ from .models import Profile, Favorite, Comment
 from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True)
-
     class Meta:
         model = User
-        fields = ['id', 'username', 'password']
-
-    def create(self, validated_data):
-        username = validated_data.get('username')
-        password = validated_data.get('password')
-        if not username or not password:
-            raise serializers.ValidationError("Username and password are required")
-        if User.objects.filter(username=username).exists():
-            raise serializers.ValidationError("Username already taken")
-        user = User.objects.create_user(username=username, password=password)
-        Profile.objects.create(user=user)
-        return user
+        fields = ["id", "username"]
 
 class ProfileSerializer(serializers.ModelSerializer):
+    avatar = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = Profile
-        fields = ['id', 'user', 'bio', 'avatar_url']
+        fields = ["id", "user", "bio", "avatar"]
+        read_only_fields = ["user"]
 
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:

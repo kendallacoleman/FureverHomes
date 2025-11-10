@@ -4,10 +4,13 @@ from rest_framework import generics, viewsets
 from .serializers import UserSerializer, ProfileSerializer, FavoriteSerializer, CommentSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
 import requests
 from django.conf import settings
 from rest_framework.views import APIView
 from .models import Profile, Favorite, Comment
+from rest_framework import status
+from rest_framework.decorators import action
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -126,3 +129,25 @@ class PetDetailView(APIView):
         except requests.exceptions.RequestException as e:
             print("Request error:", e)
             return Response({"error": str(e)}, status=502)
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def get_queryset(self):
+        # Users only see their own profile
+        return Profile.objects.filter(user=self.request.user)
+
+    @action(detail=False, methods=["get", "patch"], url_path="me")
+    def me(self, request):
+        profile = request.user.profile
+        if request.method == 'GET':
+            serializer = self.get_serializer(profile)
+            return Response(serializer.data)
+        elif request.method == 'PATCH':
+            serializer = self.get_serializer(profile, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)

@@ -10,6 +10,7 @@ import Search from './pages/Search';
 import Favorites from './pages/Favorites';
 import AnimalDetail from './pages/AnimalDetail'
 import Help from "./pages/Help"
+import ProfilePage from "./pages/ProfilePage"
 
 function Logout() {
   localStorage.clear()
@@ -34,6 +35,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Favorites />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
