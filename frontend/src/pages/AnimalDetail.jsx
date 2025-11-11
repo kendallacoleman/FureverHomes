@@ -13,7 +13,7 @@ export default function AnimalDetail() {
   useEffect(() => {
     const fetchPet = async () => {
       try {
-        const res = await api.get(`/api/animal/${id}/`);
+        const res = await api.get(`/animal/${id}/`);
         setPet(res.data.animal);
       } catch (err) {
         console.error("Failed to fetch pet details:", err);
