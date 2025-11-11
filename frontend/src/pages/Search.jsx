@@ -33,8 +33,8 @@ function Search() {
         );
 
         try {
+            console.log("Sending request to:", api.defaults.baseURL + "/api/search/");
             const response = await api.get('/api/search/', { 
-                console.log("Sending request to:", api.defaults.baseURL + "/api/search/");
                 params: validParams 
             });
             
