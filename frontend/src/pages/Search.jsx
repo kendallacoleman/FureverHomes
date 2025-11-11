@@ -34,6 +34,7 @@ function Search() {
 
         try {
             const response = await api.get('/api/search/', { 
+                console.log("Sending request to:", api.defaults.baseURL + "/api/search/");
                 params: validParams 
             });
             
