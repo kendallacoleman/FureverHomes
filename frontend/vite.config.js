@@ -10,5 +10,5 @@ export default defineConfig({
       input: path.resolve(__dirname, 'index.html')
     }
   },
-  base: './',             // important for correct relative paths
+  base: '/',
 })
