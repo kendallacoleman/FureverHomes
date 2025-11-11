@@ -27,10 +27,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)c-l#&$$w32#ckxs6nmr*@o^_ip+gme4&m9bmuytt-ks1x956p'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = ENVIRONMENT != 'production'
+# DEBUG = ENVIRONMENT != 'production'
+DEBUG = True
 
 
 REST_FRAMEWORK = {
@@ -122,13 +123,29 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # }
 
 import dj_database_url
-if ENVIRONMENT == "production":
-    DATABASES = {
-        "default":
-        dj_database_url.config(default=os.getenv("DATABASE_URL", "sqlite:///db.sqlite3"))
-    }
+# if ENVIRONMENT == "production":
+#     DATABASES = {
+#         "default":
+#         dj_database_url.config(default=os.getenv("DATABASE_URL", "sqlite:///db.sqlite3"))
+#     }
     
+# else:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.sqlite3",
+#             "NAME": BASE_DIR / "db.sqlite3",
+#         }
+#     }
+if os.getenv("DATABASE_URL"):
+    # === PRODUCTION DATABASE CONFIGURATION ===
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.getenv("DATABASE_URL"),
+            conn_max_age=600, # Recommended setting for persistent connections
+        )
+    }
 else:
+    # === DEVELOPMENT DATABASE CONFIGURATION ===
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
