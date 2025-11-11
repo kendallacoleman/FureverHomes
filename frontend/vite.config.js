@@ -5,10 +5,10 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: 'dist',       // default output folder
+    outDir: 'dist',
     rollupOptions: {
-      input: path.resolve(__dirname, 'index.html')
-    }
+      input: path.resolve(__dirname, 'index.html'),
+    },
   },
-  base: './',
+  base: './', 
 })
