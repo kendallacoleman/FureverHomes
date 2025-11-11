@@ -14,7 +14,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await api.get("/api/profiles/me/"); 
+        const res = await api.get("/profiles/me/"); 
         setProfile(res.data);
         setBio(res.data.bio || "");
       } catch (err) {
@@ -37,7 +37,7 @@ export default function ProfilePage() {
 
     try {
       setLoading(true);
-      const res = await api.patch(`/api/profiles/${profile.id}/`, formData, {
+      const res = await api.patch(`/profiles/${profile.id}/`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setProfile(res.data);

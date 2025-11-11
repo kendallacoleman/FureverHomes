@@ -136,7 +136,9 @@ else:
         }
     }
 
-ALLOWED_HOSTS = ['fureverhomes-g5esf.ondigitalocean.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['fureverhomes-g5esf.ondigitalocean.app', 'www.fureverhomes-g5esf.ondigitalocean.app', 'localhost', '127.0.0.1']
+
+APPEND_SLASH = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

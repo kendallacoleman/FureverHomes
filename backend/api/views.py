@@ -36,6 +36,10 @@ class PetSearchView(APIView):
         return response.json().get("access_token")
 
     def get(self, request):
+        print("Received search request:", request.query_params)
+        print("Headers:", request.headers)
+        print("Query params:", request.query_params)
+
         try:
             token = self.get_petfinder_token()
             headers = {"Authorization": f"Bearer {token}"}

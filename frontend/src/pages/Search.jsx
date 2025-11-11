@@ -32,8 +32,9 @@ function Search() {
             Object.entries(searchParams).filter(([, value]) => value !== '')
         );
 
+        console.log("Requesting:", api.defaults.baseURL + "/search/", validParams);
         try {
-            const response = await api.get('/api/search/', { 
+            const response = await api.get('/search/', { 
                 params: validParams 
             });
             
@@ -56,7 +57,7 @@ function Search() {
     // Call backend favorite API when toggling
     const handleFavoriteToggle = async (petId) => {
         try {
-            await api.post(`/api/favorites/toggle/`, { pet_id: petId });
+            await api.post(`/favorites/toggle/`, { pet_id: petId });
             // update local state to reflect change
             setPets((prev) =>
                 prev.map((p) => p.id === petId ? { ...p, is_favorite: !p.is_favorite } : p)
