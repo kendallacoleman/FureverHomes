@@ -17,17 +17,6 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
-    def perform_create(self, serializer):
-        # Save user instance but don't commit password yet
-        user = serializer.save()
-        user.set_password(serializer.validated_data["password"])  # hash password
-        user.save()
-
-        # Automatically create an associated Profile
-        Profile.objects.create(user=user)
-
-        print(f"User {user.username} created successfully with a profile")
-
 class PetSearchView(APIView):
     permission_classes = [AllowAny]
 
