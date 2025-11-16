@@ -14,7 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 import os
-ENVIRONMENT = os.getenv("DJANGO_ENV", "production")
+ENVIRONMENT = os.getenv("DJANGO_ENV", "development")
 
 
 load_dotenv()
@@ -136,22 +136,26 @@ import dj_database_url
 #             "NAME": BASE_DIR / "db.sqlite3",
 #         }
 #     }
-if os.getenv("DATABASE_URL"):
-    # === PRODUCTION DATABASE CONFIGURATION ===
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+
+if ENVIRONMENT == "production":
+    SECRET_KEY = os.getenv("SECRET_KEY")
     DATABASES = {
         "default": dj_database_url.config(
             default=os.getenv("DATABASE_URL"),
-            conn_max_age=600, # Recommended setting for persistent connections
+            conn_max_age=600,
+            ssl_require=True,
         )
     }
 else:
-    # === DEVELOPMENT DATABASE CONFIGURATION ===
+    SECRET_KEY = "local-secret-key"
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
+
 
 ALLOWED_HOSTS = ['fureverhomes-g5esf.ondigitalocean.app', 'www.fureverhomes-g5esf.ondigitalocean.app', 'localhost', '127.0.0.1']
 

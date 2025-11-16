@@ -30,7 +30,7 @@ function Form({ route, method }) {
         navigate("/login"); // redirect to login after register
       }
     } catch (err) {
-      console.error(err);
+      console.error("Auth error:", err);
       setErrorMsg(err.response?.data?.detail || "Login/Register failed");
     } finally {
       setLoading(false);
