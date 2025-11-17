@@ -10,7 +10,7 @@ from django.conf import settings
 from rest_framework.views import APIView
 from .models import Profile, Favorite, Comment
 from rest_framework import status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, parser_classes
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -137,17 +137,47 @@ class ProfileViewSet(viewsets.ModelViewSet):
     parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
-        # Users only see their own profile
         return Profile.objects.filter(user=self.request.user)
 
-    @action(detail=False, methods=["get", "patch"], url_path="me")
+    def get_object(self):
+        profile, _ = Profile.objects.get_or_create(user=self.request.user)
+        return profile
+
+    @action(
+        detail=False, 
+        methods=["get", "patch"], 
+        url_path="me", 
+    )
+    # def me(self, request):
+    #     profile, _ = Profile.objects.get_or_create(user=request.user)
+        
+    #     if request.method == 'GET':
+    #         serializer = self.get_serializer(profile)
+    #         return Response(serializer.data)
+    #     elif request.method == 'PATCH':
+    #         serializer = self.get_serializer(profile, data=request.data, partial=True)
+    #         if serializer.is_valid():
+    #             serializer.save()
+    #             return Response(serializer.data)
+    #         else:
+    #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def me(self, request):
-        profile = request.user.profile
+        profile, _ = Profile.objects.get_or_create(user=request.user)
+        
         if request.method == 'GET':
             serializer = self.get_serializer(profile)
             return Response(serializer.data)
         elif request.method == 'PATCH':
+            print("=== FILE UPLOAD DEBUG ===")
+            print("Request data:", request.data)
+            print("Request FILES:", request.FILES)
+            print("Content-Type:", request.content_type)
+            
             serializer = self.get_serializer(profile, data=request.data, partial=True)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data)
+            if serializer.is_valid():
+                serializer.save()
+                print("Profile saved successfully")
+                return Response(serializer.data)
+            else:
+                print("Serializer errors:", serializer.errors)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -10,6 +10,9 @@ export default function ProfilePage() {
   const [message, setMessage] = useState("");
   const [editing, setEditing] = useState(false);
 
+  // Dynamically get BASE_URL from api.js for media URLs
+  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
   // Fetch profile when component mounts
   useEffect(() => {
     const fetchProfile = async () => {
@@ -22,7 +25,6 @@ export default function ProfilePage() {
         setMessage("Error: Could not load your profile.");
       }
     };
-
     fetchProfile();
   }, []);
 
@@ -33,13 +35,22 @@ export default function ProfilePage() {
 
     const formData = new FormData();
     formData.append("bio", bio);
-    if (avatarFile) formData.append("avatar", avatarFile);
+    // if (avatarFile) formData.append("avatar", avatarFile);
+
+    if (avatarFile) {
+      console.log("Avatar file:", avatarFile);
+      formData.append("avatar", avatarFile);
+    }
 
     try {
       setLoading(true);
-      const res = await api.patch(`/profiles/${profile.id}/`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+
+      // const res = await api.patch(`/profiles/me/`, formData, {
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+      const res = await api.patch(`/profiles/me/`, formData);
       setProfile(res.data);
       setMessage("Profile updated successfully!");
       setEditing(false); 
@@ -70,7 +81,7 @@ export default function ProfilePage() {
           <img
             src={
               profile.avatar
-                ? `http://localhost:8000${profile.avatar}`
+                ? `${BASE_URL}${profile.avatar}` // use dynamic BASE_URL
                 : "https://placehold.co/150x150?text=No+Avatar"
             }
             alt="Profile avatar"

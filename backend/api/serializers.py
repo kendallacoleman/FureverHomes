@@ -16,13 +16,42 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+# class ProfileSerializer(serializers.ModelSerializer):
+#     avatar = serializers.ImageField(required=False)
+
+#     class Meta:
+#         model = Profile
+#         fields = ["id", "user", "bio", "avatar"]
+#         read_only_fields = ["user"]
 class ProfileSerializer(serializers.ModelSerializer):
-    avatar = serializers.ImageField(required=False, allow_null=True)
+    user = serializers.SerializerMethodField()
+    avatar = serializers.ImageField(required=False, allow_null=True, use_url=True)
 
     class Meta:
         model = Profile
         fields = ["id", "user", "bio", "avatar"]
         read_only_fields = ["user"]
+    
+    def get_user(self, obj):
+        return {
+            "id": obj.user.id,
+            "username": obj.user.username
+        }
+    
+    def update(self, instance, validated_data):
+        print(f"Updating profile with data: {validated_data}")
+        instance.bio = validated_data.get('bio', instance.bio)
+        
+        if 'avatar' in validated_data and validated_data['avatar'] is not None:
+            # Delete old avatar if it exists
+            if instance.avatar:
+                instance.avatar.delete(save=False)
+            instance.avatar = validated_data['avatar']
+            print(f"Avatar set to: {instance.avatar}")
+        
+        instance.save()
+        print(f"Profile saved. Avatar path: {instance.avatar}")
+        return instance
 
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
