@@ -15,6 +15,9 @@ function Search() {
     const [pets, setPets] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const [pagination, setPagination] = useState(null);
 
     const handleInputChange = (e) => {
         setSearchParams({
@@ -23,14 +26,17 @@ function Search() {
         });
     };
 
-    const searchPets = async (e) => {
-        e.preventDefault();
+    const searchPets = async (e, page = 1) => {
+        if (e) e.preventDefault();
         setLoading(true);
         setError(null);
 
         const validParams = Object.fromEntries(
             Object.entries(searchParams).filter(([, value]) => value !== '')
         );
+
+        // Add page to params
+        validParams.page = page;
 
         console.log("Requesting:", api.defaults.baseURL + "/search/", validParams);
         try {
@@ -40,8 +46,18 @@ function Search() {
             
             if (response.status === 200) {
                 setPets(response.data.animals || []); 
+                setPagination(response.data.pagination || null);
+                setCurrentPage(page);
+                
+                // Calculate total pages from pagination data
+                if (response.data.pagination) {
+                    const total = response.data.pagination.total_pages || 
+                                 Math.ceil(response.data.pagination.total_count / 12) || 
+                                 1;
+                    setTotalPages(total);
+                }
             } else {
-                 setError(response.data.error || "Search failed with an unknown error.");
+                setError(response.data.error || "Search failed with an unknown error.");
             }
 
         } catch (err) {
@@ -54,7 +70,14 @@ function Search() {
         }
     };
 
-    // Call backend favorite API when toggling
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages && !loading) {
+            searchPets(null, newPage);
+            // Scroll to top of results
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
     const handleFavoriteToggle = async (petId) => {
         try {
             await api.post(`/favorites/toggle/`, { pet_id: petId });
@@ -126,15 +149,93 @@ function Search() {
                 {!loading && pets.length === 0 && <p>No pets found. Adjust filters and try again.</p>}
 
                 {!loading && pets.length > 0 && (
-                    <div className="pet-list-grid">
-                        {pets.map((pet) => (
-                            <PetCard 
-                                key={pet.id} 
-                                pet={pet} 
-                                onFavoriteToggle={handleFavoriteToggle} 
-                            />
-                        ))}
-                    </div>
+                    <>
+                        <div className="results-info">
+                            <p>Showing page {currentPage} of {totalPages}</p>
+                            {pagination && pagination.total_count && (
+                                <p className="total-results">{pagination.total_count} total results</p>
+                            )}
+                        </div>
+
+                        <div className="pet-list-grid">
+                            {pets.map((pet) => (
+                                <PetCard 
+                                    key={pet.id} 
+                                    pet={pet} 
+                                    onFavoriteToggle={handleFavoriteToggle} 
+                                />
+                            ))}
+                        </div>
+
+                        {/* Pagination Controls */}
+                        {totalPages > 1 && (
+                            <div className="pagination">
+                                <button 
+                                    className="pagination-btn"
+                                    onClick={() => handlePageChange(1)}
+                                    disabled={currentPage === 1 || loading}
+                                >
+                                    First
+                                </button>
+                                
+                                <button 
+                                    className="pagination-btn"
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage === 1 || loading}
+                                >
+                                    Previous
+                                </button>
+
+                                <div className="pagination-info">
+                                    <span className="page-numbers">
+                                        {/* Show page numbers */}
+                                        {[...Array(totalPages)].map((_, index) => {
+                                            const pageNum = index + 1;
+                                            // Show first page, last page, current page, and pages around current
+                                            if (
+                                                pageNum === 1 ||
+                                                pageNum === totalPages ||
+                                                (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                                            ) {
+                                                return (
+                                                    <button
+                                                        key={pageNum}
+                                                        className={`page-number ${pageNum === currentPage ? 'active' : ''}`}
+                                                        onClick={() => handlePageChange(pageNum)}
+                                                        disabled={loading}
+                                                    >
+                                                        {pageNum}
+                                                    </button>
+                                                );
+                                            } else if (
+                                                pageNum === currentPage - 2 ||
+                                                pageNum === currentPage + 2
+                                            ) {
+                                                return <span key={pageNum} className="pagination-ellipsis">...</span>;
+                                            }
+                                            return null;
+                                        })}
+                                    </span>
+                                </div>
+
+                                <button 
+                                    className="pagination-btn"
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage === totalPages || loading}
+                                >
+                                    Next
+                                </button>
+
+                                <button 
+                                    className="pagination-btn"
+                                    onClick={() => handlePageChange(totalPages)}
+                                    disabled={currentPage === totalPages || loading}
+                                >
+                                    Last
+                                </button>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

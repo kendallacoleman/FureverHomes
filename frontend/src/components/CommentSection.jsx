@@ -7,7 +7,7 @@ export default function CommentSection({ petId }) {
 
   const fetchComments = async () => {
     try {
-      const res = await api.get(`/api/comments/`, { params: { pet_id: petId } });
+      const res = await api.get(`/comments/`, { params: { pet_id: petId } });
       setComments(res.data);
     } catch (err) {
       console.error(err);
@@ -23,7 +23,7 @@ export default function CommentSection({ petId }) {
     if (!newComment) return;
 
     try {
-      await api.post(`/api/comments/`, { pet_id: petId, text: newComment });
+      await api.post(`/comments/`, { pet_id: petId, text: newComment });
       setNewComment("");
       fetchComments();
     } catch (err) {

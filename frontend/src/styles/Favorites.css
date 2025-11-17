@@ -1,0 +1,89 @@
+.favorites-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  animation: fadeIn 0.6s ease;
+}
+
+.favorites-page h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Empty State */
+.favorites-page > div {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.favorites-page > div::before {
+  content: "💔";
+  display: block;
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+/* Pet Grid */
+.pet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  animation: slideUp 0.6s ease;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .favorites-page {
+    padding: 1.5rem;
+  }
+
+  .favorites-page h1 {
+    font-size: 2rem;
+  }
+
+  .pet-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .favorites-page {
+    padding: 1rem;
+  }
+
+  .favorites-page h1 {
+    font-size: 1.75rem;
+  }
+}

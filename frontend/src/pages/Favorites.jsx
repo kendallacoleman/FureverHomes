@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api";
 import PetCard from "../components/PetCard";
+import "../styles/Favorites.css"
 
 export default function Favorites() {
   const [favorites, setFavorites] = useState([]);

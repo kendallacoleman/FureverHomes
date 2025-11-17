@@ -18,7 +18,7 @@ function Home() {
                 </div>
                 
                 <div className="hero-content">
-                    <h1 className="hero-title">Welcome to Furever Homes 🐾</h1>
+                    <h1 className="hero-title">Welcome to Furever Homes</h1>
                     <p className="hero-subtitle">
                         Find your new best friend today. Connect with adoptable animals and give them the loving home they deserve.
                     </p>

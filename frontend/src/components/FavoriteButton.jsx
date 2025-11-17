@@ -8,7 +8,7 @@ export default function FavoriteButton({ petId, petName }) {
   useEffect(() => {
     const checkFavorite = async () => {
       try {
-        const res = await api.get("/api/favorites/");
+        const res = await api.get("/favorites/");
         const favorited = res.data.some((f) => f.pet_id === petId);
         setIsFavorite(favorited);
       } catch (error) {
@@ -22,14 +22,14 @@ export default function FavoriteButton({ petId, petName }) {
     setLoading(true);
     try {
       if (!isFavorite) {
-        await api.post("/api/favorites/", { pet_id: petId, pet_name: petName });
+        await api.post("/favorites/", { pet_id: petId, pet_name: petName });
         setIsFavorite(true);
       } else {
         // delete favorite
-        const res = await api.get("/api/favorites/");
+        const res = await api.get("/favorites/");
         const favoriteObj = res.data.find((f) => f.pet_id === petId);
         if (favoriteObj) {
-          await api.delete(`/api/favorites/${favoriteObj.id}/`);
+          await api.delete(`/favorites/${favoriteObj.id}/`);
           setIsFavorite(false);
         }
       }
