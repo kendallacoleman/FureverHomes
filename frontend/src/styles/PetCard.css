@@ -84,25 +84,28 @@
 /* Actions Section */
 .pet-actions {
   display: flex;
+  flex-wrap: nowrap;
   gap: 0.75rem;
   margin-top: auto;
   padding-top: 1rem;
 }
 
-.pet-actions a {
-  flex: 1;
-  text-decoration: none;
+.pet-actions a, 
+.pet-actions button {
+  flex: 1 1 calc(50% - 0.75rem);
+  min-width: 120px;
 }
 
 .details-button {
   width: 100%;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: #2c3e50;
+  text-align: center;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 300;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);

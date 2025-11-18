@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import AdoptionCharts from "../components/AdoptionCharts";
 import "../styles/Home.css";
 
 function Home() {
@@ -10,10 +11,12 @@ function Home() {
 
     return (
         <div className="home-page">
+            {/* Hero Section with Video Background */}
             <section className="hero-section">
                 <div className="video-background">
                     <video autoPlay loop muted playsInline className="hero-video">
-                        <source src="/videos/FureverHomes-Homepage-Video.mp4" type="video/mp4" />                    </video>
+                        <source src="/videos/FureverHomes-Homepage-Video.mp4" type="video/mp4" />
+                    </video>
                     <div className="video-overlay"></div>
                 </div>
                 
@@ -28,10 +31,10 @@ function Home() {
                 </div>
             </section>
 
-            {/* About Section */}
-            <section className="about-section">
-                <div className="about-container">
-                    <h2 className="about-title">About Us and Our Vision 🐾</h2>
+            {/* Stats Section */}
+            <section className="stats-section">
+                <div className="stats-container">
+                    {/* <h2 className="section-title">The Numbers Behind the Mission 🐾</h2>
                     
                     <div className="stats-grid">
                         <div className="stat-card">
@@ -45,27 +48,19 @@ function Home() {
                         <div className="stat-card">
                             <div className="stat-number">2.3M</div>
                             <div className="stat-label">Left in shelters</div>
-                        </div>
-                    </div>
+                        </div> */}
+                    {/* </div> */}
+                </div>
+            </section>
+
+            
+
+            {/* About Section */}
+            <section className="about-section">
+                <div className="about-container">
+                    <h2 className="about-title">About Us and Our Vision 🐾</h2>
 
                     <div className="about-content">
-                        <div className="about-card">
-                            <h3>The Challenge</h3>
-                            <p>
-                                Every year, about 6.5 million cats and dogs enter shelters in the United States, 
-                                but only about 4.2 million get adopted. This means about 2.3 million dogs and cats 
-                                remain in shelters each year without finding homes.
-                            </p>
-                        </div>
-
-                        <div className="about-card">
-                            <h3>The Impact</h3>
-                            <p>
-                                Because so many pets are left in shelters, approximately 2 million healthy cats and 
-                                dogs are euthanized annually in the US due to overcrowding and lack of resources.
-                            </p>
-                        </div>
-
                         <div className="about-card highlight">
                             <h3>Our Mission</h3>
                             <p>
@@ -75,16 +70,10 @@ function Home() {
                                 help more animals find their forever homes.
                             </p>
                         </div>
-
-                        <div className="about-card">
-                            <h3>How We Help</h3>
-                            <p>
-                                We connect potential pet adopters with shelters and rescue organizations through 
-                                a user-friendly platform that showcases available pets. Our goal is to make the 
-                                adoption process seamless and enjoyable for both adopters and animals.
-                            </p>
-                        </div>
                     </div>
+
+                    {/* Charts Section */}
+                    <AdoptionCharts />
 
                     <div className="help-callout">
                         <p>

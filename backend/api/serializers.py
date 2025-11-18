@@ -16,13 +16,6 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-# class ProfileSerializer(serializers.ModelSerializer):
-#     avatar = serializers.ImageField(required=False)
-
-#     class Meta:
-#         model = Profile
-#         fields = ["id", "user", "bio", "avatar"]
-#         read_only_fields = ["user"]
 class ProfileSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     avatar = serializers.ImageField(required=False, allow_null=True, use_url=True)
@@ -38,8 +31,15 @@ class ProfileSerializer(serializers.ModelSerializer):
             "username": obj.user.username
         }
     
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # Ensure avatar URL is absolute
+        request = self.context.get('request')
+        if instance.avatar and request:
+            representation['avatar'] = request.build_absolute_uri(instance.avatar.url)
+        return representation
+    
     def update(self, instance, validated_data):
-        print(f"Updating profile with data: {validated_data}")
         instance.bio = validated_data.get('bio', instance.bio)
         
         if 'avatar' in validated_data and validated_data['avatar'] is not None:
@@ -47,10 +47,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             if instance.avatar:
                 instance.avatar.delete(save=False)
             instance.avatar = validated_data['avatar']
-            print(f"Avatar set to: {instance.avatar}")
         
         instance.save()
-        print(f"Profile saved. Avatar path: {instance.avatar}")
         return instance
 
 class FavoriteSerializer(serializers.ModelSerializer):
@@ -60,7 +58,22 @@ class FavoriteSerializer(serializers.ModelSerializer):
         read_only_fields = ["user", "created_at"]
 
 class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    user_avatar = serializers.SerializerMethodField()
+
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'pet_id', 'text', 'created_at']
-        read_only_fields = ['user', 'created_at']
+        fields = ['id', 'user', 'user_avatar', 'pet_id', 'text', 'created_at']
+        read_only_fields = ['user', 'user_avatar', 'created_at']
+    
+    def get_user(self, obj):
+        return {
+            'id': obj.user.id,
+            'username': obj.user.username
+        }
+    
+    def get_user_avatar(self, obj):
+        request = self.context.get('request')
+        if hasattr(obj.user, 'profile') and obj.user.profile.avatar and request:
+            return request.build_absolute_uri(obj.user.profile.avatar.url)
+        return None

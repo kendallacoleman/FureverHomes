@@ -11,6 +11,8 @@ from rest_framework.views import APIView
 from .models import Profile, Favorite, Comment
 from rest_framework import status
 from rest_framework.decorators import action, parser_classes
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.http import JsonResponse
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -181,3 +183,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
             else:
                 print("Serializer errors:", serializer.errors)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+
+@ensure_csrf_cookie
+def get_csrf_token(request):
+    """
+    Endpoint to get CSRF token
+    """
+    return JsonResponse({'detail': 'CSRF cookie set'})
