@@ -1,58 +1,67 @@
 import { useState, useEffect } from "react";
 import api from "../api";
+import "../styles/FavoriteButton.css";
 
-export default function FavoriteButton({ petId, petName }) {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [loading, setLoading] = useState(false);
+export default function FavoriteButton({ petId, petName, initialFavorited = false }) {
+  const [isFavorited, setIsFavorited] = useState(initialFavorited);
+  const [loading, setLoading] = useState(true);
 
+  // Check if pet is favorited on mount
   useEffect(() => {
-    const checkFavorite = async () => {
+    const checkFavoriteStatus = async () => {
       try {
-        const res = await api.get("/favorites/");
-        const favorited = res.data.some((f) => f.pet_id === petId);
-        setIsFavorite(favorited);
-      } catch (error) {
-        console.error("Error fetching favorites:", error);
+        const res = await api.get('/favorites/');
+        const favorites = res.data;
+        const isFav = favorites.some(fav => fav.pet_id === petId);
+        setIsFavorited(isFav);
+      } catch (err) {
+        console.error("Failed to check favorite status:", err);
+      } finally {
+        setLoading(false);
       }
     };
-    checkFavorite();
+
+    checkFavoriteStatus();
   }, [petId]);
 
-  const toggleFavorite = async () => {
-    setLoading(true);
+  const handleToggle = async () => {
     try {
-      if (!isFavorite) {
-        await api.post("/favorites/", { pet_id: petId, pet_name: petName });
-        setIsFavorite(true);
-      } else {
-        // delete favorite
-        const res = await api.get("/favorites/");
-        const favoriteObj = res.data.find((f) => f.pet_id === petId);
-        if (favoriteObj) {
-          await api.delete(`/favorites/${favoriteObj.id}/`);
-          setIsFavorite(false);
+      if (isFavorited) {
+        // Remove from favorites
+        const res = await api.get('/favorites/');
+        const favorite = res.data.find(fav => fav.pet_id === petId);
+        if (favorite) {
+          await api.delete(`/favorites/${favorite.id}/`);
         }
+      } else {
+        // Add to favorites
+        await api.post('/favorites/', {
+          pet_id: petId,
+          pet_name: petName
+        });
       }
-    } catch (error) {
-      console.error("Error toggling favorite:", error.response || error);
-    } finally {
-      setLoading(false);
+      setIsFavorited(!isFavorited);
+    } catch (err) {
+      console.error("Error toggling favorite:", err);
+      alert("Failed to update favorite. Please try again.");
     }
   };
 
+  if (loading) {
+    return (
+      <button className="favorite-button" disabled>
+        ⏳
+      </button>
+    );
+  }
+
   return (
-    <button
-      onClick={toggleFavorite}
-      disabled={loading}
-      style={{
-        backgroundColor: isFavorite ? "#ffcccb" : "#eee",
-        border: "1px solid #999",
-        padding: "8px 12px",
-        borderRadius: "8px",
-        cursor: "pointer",
-      }}
+    <button 
+      className={`favorite-button ${isFavorited ? 'favorited' : ''}`}
+      onClick={handleToggle}
+      title={isFavorited ? "Remove from favorites" : "Add to favorites"}
     >
-      {isFavorite ? "❤️ Favorited" : "🤍 Add to Favorites"}
+      {isFavorited ? '❤️' : '🤍'}
     </button>
   );
 }

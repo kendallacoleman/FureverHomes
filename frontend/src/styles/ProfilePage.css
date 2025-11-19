@@ -216,6 +216,60 @@
   margin: 0;
 }
 
+/* --- New/Updated Styles for Logout Button --- */
+
+.profile-actions {
+  /* Ensure buttons are next to each other */
+  display: flex; 
+  gap: 1rem;
+  margin-top: 0.5rem;
+  /* Align buttons to the start of the info section */
+  align-self: flex-start;
+}
+
+.logout-btn {
+  /* Inherit general size/shape from edit button */
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  /* Use a red/danger color gradient */
+  background: linear-gradient(135deg, #ff7171 0%, #dd2476 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(255, 113, 113, 0.3);
+}
+
+.logout-btn:hover {
+  transform: translateY(-2px);
+  /* Darker shadow on hover */
+  box-shadow: 0 4px 12px rgba(255, 113, 113, 0.4); 
+}
+
+.logout-btn:active {
+  transform: translateY(0);
+}
+
+/* --- Responsive Adjustments --- */
+
+@media (max-width: 768px) {
+    .profile-actions {
+        /* On small screens, stack the buttons vertically */
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem; 
+    }
+
+    .logout-btn {
+      /* Make the button full width on mobile */
+      width: 100%; 
+      text-align: center;
+    }
+}
+
 .profile-message {
   background: #e8f5e9;
   color: #2e7d32;

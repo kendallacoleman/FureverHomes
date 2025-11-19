@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api";
 import "../styles/ProfilePage.css";
 
@@ -9,9 +10,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [editing, setEditing] = useState(false);
-
-  // Dynamically get BASE_URL from api.js for media URLs
-  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const navigate = useNavigate();
 
   // Fetch profile when component mounts
   useEffect(() => {
@@ -35,7 +34,6 @@ export default function ProfilePage() {
 
     const formData = new FormData();
     formData.append("bio", bio);
-    // if (avatarFile) formData.append("avatar", avatarFile);
 
     if (avatarFile) {
       console.log("Avatar file:", avatarFile);
@@ -45,11 +43,6 @@ export default function ProfilePage() {
     try {
       setLoading(true);
 
-      // const res = await api.patch(`/profiles/me/`, formData, {
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //   },
-      // });
       const res = await api.patch(`/profiles/me/`, formData);
       setProfile(res.data);
       setMessage("Profile updated successfully!");
@@ -67,6 +60,15 @@ export default function ProfilePage() {
     }
   };
 
+  // Handle logout
+  const handleLogout = () => {
+    // Clear all tokens from localStorage
+    localStorage.clear();
+    
+    // Redirect to login page
+    navigate("/login");
+  };
+
   if (!profile) {
     return <div className="profile-page"><p>Loading profile...</p></div>;
   }
@@ -81,7 +83,7 @@ export default function ProfilePage() {
           <img
             src={
               profile.avatar
-                ? `${BASE_URL}${profile.avatar}` // use dynamic BASE_URL
+                ? profile.avatar // Already full URL from serializer
                 : "https://placehold.co/150x150?text=No+Avatar"
             }
             alt="Profile avatar"
@@ -94,14 +96,22 @@ export default function ProfilePage() {
           <p className="profile-username"><strong>Username:</strong> {profile.user?.username}</p>
           <p className="profile-bio"><strong>Bio:</strong> {profile.bio || "No bio yet."}</p>
 
-          {/* Settings Button */}
+          {/* Action Buttons */}
           {!editing && (
-            <button
-              onClick={() => setEditing(true)}
-              className="edit-profile-btn"
-            >
-              Settings
-            </button>
+            <div className="profile-actions">
+              <button
+                onClick={() => setEditing(true)}
+                className="edit-profile-btn"
+              >
+                Settings
+              </button>
+              <button
+                onClick={handleLogout}
+                className="logout-btn"
+              >
+                Log Out
+              </button>
+            </div>
           )}
 
           {/* Edit Form */}
