@@ -13,6 +13,7 @@ from rest_framework import status
 from rest_framework.decorators import action, parser_classes
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
+from rest_framework.exceptions import PermissionDenied
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -95,13 +96,33 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
-        pet_id = self.request.query_params.get("pet_id")
-        if pet_id:
-            return Comment.objects.filter(pet_id=pet_id).order_by("-created_at")
-        return Comment.objects.none()
+        # For list view, filter by pet_id
+        if self.action == 'list':
+            pet_id = self.request.query_params.get("pet_id")
+            if pet_id:
+                return Comment.objects.filter(pet_id=pet_id).order_by("-created_at")
+            return Comment.objects.none()
+        
+        # For detail views (retrieve, update, destroy), return all comments
+        # The viewset will handle the specific ID lookup
+        return Comment.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+    
+    def perform_destroy(self, instance):
+        # Only allow users to delete their own comments
+        if instance.user != self.request.user:
+            raise PermissionDenied("You can only delete your own comments.")
+        print(f"Deleting comment {instance.id} by user {self.request.user.username}")
+        instance.delete()
+    
+    # CRITICAL: This ensures context is passed to serializer
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        print(f"Comment serializer context includes request: {self.request is not None}")
+        return context
 
 class PetDetailView(APIView):
     permission_classes = [AllowAny]
@@ -149,41 +170,33 @@ class ProfileViewSet(viewsets.ModelViewSet):
         detail=False, 
         methods=["get", "patch"], 
         url_path="me", 
+        parser_classes=[MultiPartParser, FormParser]
     )
-    # def me(self, request):
-    #     profile, _ = Profile.objects.get_or_create(user=request.user)
-        
-    #     if request.method == 'GET':
-    #         serializer = self.get_serializer(profile)
-    #         return Response(serializer.data)
-    #     elif request.method == 'PATCH':
-    #         serializer = self.get_serializer(profile, data=request.data, partial=True)
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             return Response(serializer.data)
-    #         else:
-    #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def me(self, request):
         profile, _ = Profile.objects.get_or_create(user=request.user)
         
         if request.method == 'GET':
-            serializer = self.get_serializer(profile)
+            # CRITICAL: Pass request context
+            serializer = self.get_serializer(profile, context={'request': request})
+            print(f"Profile GET for {request.user.username}: {serializer.data}")
             return Response(serializer.data)
-        elif request.method == 'PATCH':
-            print("=== FILE UPLOAD DEBUG ===")
-            print("Request data:", request.data)
-            print("Request FILES:", request.FILES)
-            print("Content-Type:", request.content_type)
             
-            serializer = self.get_serializer(profile, data=request.data, partial=True)
+        elif request.method == 'PATCH':
+            # CRITICAL: Pass request context
+            serializer = self.get_serializer(
+                profile, 
+                data=request.data, 
+                partial=True,
+                context={'request': request}
+            )
+            
             if serializer.is_valid():
                 serializer.save()
-                print("Profile saved successfully")
+                print(f"Profile PATCH for {request.user.username}: {serializer.data}")
                 return Response(serializer.data)
             else:
-                print("Serializer errors:", serializer.errors)
+                print(f"Profile PATCH errors: {serializer.errors}")
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
 
 @ensure_csrf_cookie
 def get_csrf_token(request):

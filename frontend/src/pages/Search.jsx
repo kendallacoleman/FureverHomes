@@ -78,16 +78,17 @@ function Search() {
         }
     };
 
-    const handleFavoriteToggle = async (petId) => {
-        try {
-            await api.post(`/favorites/toggle/`, { pet_id: petId });
-            // update local state to reflect change
-            setPets((prev) =>
-                prev.map((p) => p.id === petId ? { ...p, is_favorite: !p.is_favorite } : p)
-            );
-        } catch (error) {
-            console.error("Error toggling favorite:", error);
-        }
+    // Call backend favorite API when toggling
+    const handleFavoriteToggle = async (petId, newState) => {
+        console.log(`Favorite toggled for pet ${petId}: ${newState}`);
+        // Update local state to reflect change if needed
+        setPets((prev) =>
+            prev.map((p) => 
+                String(p.id) === String(petId) 
+                    ? { ...p, is_favorite: newState } 
+                    : p
+            )
+        );
     };
     
     return (

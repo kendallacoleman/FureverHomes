@@ -45,13 +45,11 @@ export default function Favorites() {
     fetchFavorites();
   }, []);
 
-  const handleFavoriteToggle = async (petId) => {
-    try {
-      await api.post(`/favorites/toggle/`, { pet_id: petId });
-      // Remove the pet from favorites list
-      setFavorites((prev) => prev.filter((pet) => pet.id !== petId));
-    } catch (error) {
-      console.error("Error toggling favorite:", error);
+  const handleFavoriteToggle = async (petId, newState) => {
+    console.log(`Favorite toggled for pet ${petId}: ${newState}`);
+    if (!newState) {
+      // Pet was unfavorited, remove from list
+      setFavorites((prev) => prev.filter((pet) => String(pet.id) !== String(petId)));
     }
   };
 
@@ -78,7 +76,7 @@ export default function Favorites() {
       <div className="favorites-page">
         <h1>Your Favorite Pets</h1>
         <div className="empty-state">
-          <p>No favorites yet! Try searching for pets and add them to your favorites.</p>
+          <p>No favorites yet! Start searching for pets and add them to your favorites.</p>
         </div>
       </div>
     );

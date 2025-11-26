@@ -13,8 +13,6 @@ export default function AnimalDetail() {
   const [submitting, setSubmitting] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
-  const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,6 +51,7 @@ export default function AnimalDetail() {
         text: newComment
       });
       
+      console.log("New comment response:", res.data); // Debug log
       // Add new comment to list
       setComments([res.data, ...comments]);
       setNewComment("");
@@ -61,6 +60,34 @@ export default function AnimalDetail() {
       alert("Failed to post comment. Please try again.");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleCommentDelete = async (commentId) => {
+    if (!window.confirm("Are you sure you want to delete this comment?")) {
+      return;
+    }
+
+    console.log(`Attempting to delete comment ${commentId}`);
+    
+    try {
+      const response = await api.delete(`/comments/${commentId}/`);
+      console.log("Delete response:", response);
+      
+      // Remove comment from list
+      setComments(comments.filter(c => c.id !== commentId));
+      console.log(`Successfully deleted comment ${commentId}`);
+    } catch (err) {
+      console.error("Failed to delete comment:", err);
+      console.error("Error response:", err.response?.data);
+      
+      if (err.response?.status === 403) {
+        alert("You don't have permission to delete this comment.");
+      } else if (err.response?.status === 404) {
+        alert("Comment not found.");
+      } else {
+        alert("Failed to delete comment. Please try again.");
+      }
     }
   };
 
@@ -159,7 +186,7 @@ export default function AnimalDetail() {
                 <img
                   src={
                     currentUser.avatar
-                      ? `${BASE_URL}${currentUser.avatar}`
+                      ? currentUser.avatar // Already full URL from serializer
                       : "https://placehold.co/50x50?text=User"
                   }
                   alt="Your avatar"
@@ -199,7 +226,7 @@ export default function AnimalDetail() {
                   <img
                     src={
                       comment.user_avatar
-                        ? `${BASE_URL}${comment.user_avatar}`
+                        ? comment.user_avatar
                         : "https://placehold.co/50x50?text=User"
                     }
                     alt={comment.user?.username || "User"}
@@ -207,12 +234,23 @@ export default function AnimalDetail() {
                   />
                   <div className="comment-content">
                     <div className="comment-header">
-                      <span className="comment-username">
-                        {comment.user?.username || "Anonymous"}
-                      </span>
-                      <span className="comment-date">
-                        {new Date(comment.created_at).toLocaleDateString()}
-                      </span>
+                      <div className="comment-header-left">
+                        <span className="comment-username">
+                          {comment.user?.username || "Anonymous"}
+                        </span>
+                        <span className="comment-date">
+                          {new Date(comment.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                      {currentUser && comment.user?.id === currentUser.user?.id && (
+                        <button 
+                          className="comment-delete-btn"
+                          onClick={() => handleCommentDelete(comment.id)}
+                          title="Delete comment"
+                        >
+                          🗑️
+                        </button>
+                      )}
                     </div>
                     <p className="comment-text">{comment.text}</p>
                   </div>
