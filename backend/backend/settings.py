@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "api",
     "rest_framework",
     "corsheaders",
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -111,7 +112,6 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 # Database
 if ENVIRONMENT == "production":
-    # SECRET_KEY = os.getenv("SECRET_KEY")
     DATABASES = {
         "default": dj_database_url.config(
             default=os.getenv("DATABASE_URL"),
@@ -124,7 +124,6 @@ if ENVIRONMENT == "production":
         'sslmode': 'require',
     }
 else:
-    # SECRET_KEY = "local-secret-key"
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -231,3 +230,45 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
+if ENVIRONMENT == "production":
+    # DigitalOcean Spaces for production
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    
+    AWS_ACCESS_KEY_ID = os.getenv('SPACES_KEY')
+    AWS_SECRET_ACCESS_KEY = os.getenv('SPACES_SECRET')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('SPACES_BUCKET', 'fureverhomes-media')
+    AWS_S3_REGION_NAME = os.getenv('SPACES_REGION', 'nyc3')
+    AWS_S3_ENDPOINT_URL = f'https://{AWS_S3_REGION_NAME}.digitaloceanspaces.com'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.{AWS_S3_REGION_NAME}.digitaloceanspaces.com'
+    
+    # Media URL from Spaces
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+    
+    # S3 settings
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    AWS_QUERYSTRING_AUTH = False
+    
+    # Storage backends
+    STORAGES = {
+        'default': {
+            'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+        }
+    }
+else:
+    # Local filesystem for development
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+        }
+    }
