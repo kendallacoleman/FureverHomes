@@ -167,36 +167,45 @@ class ProfileViewSet(viewsets.ModelViewSet):
         return profile
 
     @action(
-        detail=False, 
-        methods=["get", "patch"], 
-        url_path="me", 
-        parser_classes=[MultiPartParser, FormParser]
+    detail=False, 
+    methods=["get", "patch"], 
+    url_path="me", 
+    parser_classes=[MultiPartParser, FormParser]
     )
     def me(self, request):
         profile, _ = Profile.objects.get_or_create(user=request.user)
-        
+
         if request.method == 'GET':
-            # CRITICAL: Pass request context
             serializer = self.get_serializer(profile, context={'request': request})
             print(f"Profile GET for {request.user.username}: {serializer.data}")
             return Response(serializer.data)
-            
+
         elif request.method == 'PATCH':
-            # CRITICAL: Pass request context
+            print("Incoming PATCH data:", request.data)
+            if 'avatar' in request.FILES:
+                print("Incoming file:", request.FILES['avatar'].name, request.FILES['avatar'].size)
+            
             serializer = self.get_serializer(
                 profile, 
                 data=request.data, 
                 partial=True,
                 context={'request': request}
             )
-            
-            if serializer.is_valid():
-                serializer.save()
-                print(f"Profile PATCH for {request.user.username}: {serializer.data}")
-                return Response(serializer.data)
-            else:
-                print(f"Profile PATCH errors: {serializer.errors}")
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                if serializer.is_valid():
+                    serializer.save()
+                    print(f"Profile PATCH success: {serializer.data}")
+                    return Response(serializer.data)
+                else:
+                    print(f"Profile PATCH validation errors: {serializer.errors}")
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                import traceback
+                print(f"Profile PATCH exception:\n{traceback.format_exc()}")
+                return Response(
+                    {"detail": "Internal server error. See backend logs."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
 
 @ensure_csrf_cookie
 def get_csrf_token(request):
