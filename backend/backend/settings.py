@@ -189,7 +189,6 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-
 # CSRF Settings
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
@@ -202,11 +201,11 @@ CSRF_TRUSTED_ORIGINS = [
 # For development with separate frontend
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read CSRF token
-CSRF_COOKIE_SECURE = False if DEBUG else True  # Use secure cookies in production
+CSRF_COOKIE_SECURE = ENVIRONMENT == "production"
 
 # Session settings
 SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SECURE = False if DEBUG else True
+SESSION_COOKIE_SECURE = ENVIRONMENT == "production"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
